@@ -1,6 +1,6 @@
 from django.db import models
 
-from settings import (
+from reviews.settings import (
     GRADE_CHOICES,
     FACTOR_FOR_REVIEW,
     FACTOR_FOR_COMMENT
