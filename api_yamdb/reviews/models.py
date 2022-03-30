@@ -18,7 +18,7 @@ class CreatedModel(models.Model):
         abstract = True
 
 
-class CreateUser(models.Model):  # Класс-родитель измените сами, по необходимости
+class CreateUser(models.Model):
     """Модель пользователя."""
     pass
 
