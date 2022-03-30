@@ -7,6 +7,7 @@ from .managers import UserManager
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    """Кастомная модель User с собственными полями"""
 
     ROLES_CHOICES = [
         (settings.USER, 'user'),

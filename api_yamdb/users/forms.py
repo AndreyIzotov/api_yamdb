@@ -6,6 +6,7 @@ from .models import User
 
 
 class UserCreationForm(forms.ModelForm):
+    """Форма создания юзера"""
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Password confirmation',
                                 widget=forms.PasswordInput)
@@ -30,6 +31,7 @@ class UserCreationForm(forms.ModelForm):
 
 
 class UserChangeForm(forms.ModelForm):
+    """Форма редактирования юзера"""
     password = ReadOnlyPasswordHashField()
 
     class Meta:

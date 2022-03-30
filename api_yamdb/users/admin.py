@@ -7,6 +7,7 @@ from .models import User
 
 
 class UserAdmin(BaseUserAdmin):
+    """Профиль админа"""
 
     form = UserChangeForm
     add_form = UserCreationForm
