@@ -1,6 +1,20 @@
+from django.db.models import Avg
 from rest_framework import serializers
 
-from reviews.models import Review, Comment
+from reviews.models import Title, Review, Comment
+
+
+class TitleSerializer(serializers.ModelSerializer):
+    """Сериализатор для модели Title."""
+    rating = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Title
+        fields = '__all__'
+    
+    # Экспериментальный рейтинг
+    # def get_rating(self, obj):
+    #     return obj.reviews.aggregate(Avg('score'))
 
 
 class ReviewSerializer(serializers.ModelSerializer):
