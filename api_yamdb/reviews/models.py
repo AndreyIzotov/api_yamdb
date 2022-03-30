@@ -8,7 +8,8 @@ from reviews.settings import (
 
 
 class CreatedModel(models.Model):
-    """Абстрактная модель. Добавляет дату создания."""
+    """Абстрактная модель.
+    Добавляет дату создания."""
     pub_date = models.DateTimeField(
         'дата публикации',
         auto_now_add=True
@@ -18,8 +19,18 @@ class CreatedModel(models.Model):
         abstract = True
 
 
-class CreateUser(models.Model):
+class CreatedUser(models.Model):
     """Модель пользователя."""
+    pass
+
+
+class Category(models.Model):
+    """Модель категорий."""
+    pass
+
+
+class Genre(models.Model):
+    """Модель жанров."""
     pass
 
 
@@ -30,7 +41,7 @@ class Title(models.Model):
 
 class Review(CreatedModel):
     """Модель отзыва."""
-    title_id = models.ForeignKey(
+    title = models.ForeignKey(
         'Title',
         on_delete=models.CASCADE,
         related_name='reviews',
@@ -38,7 +49,7 @@ class Review(CreatedModel):
         help_text='Произведение, к которому относится отзыв'
     )
     author = models.ForeignKey(
-        'CreateUser',
+        'CreatedUser',
         on_delete=models.CASCADE,
         related_name='reviews',
         verbose_name='автор',
@@ -58,7 +69,7 @@ class Review(CreatedModel):
 
 class Comment(CreatedModel):
     """Модель комментария."""
-    review_id = models.ForeignKey(
+    review = models.ForeignKey(
         'Review',
         on_delete=models.CASCADE,
         related_name='comments',
@@ -66,7 +77,7 @@ class Comment(CreatedModel):
         help_text='Отзыв, к которому относится комментарий'
     )
     author = models.ForeignKey(
-        'CreateUser',
+        'CreatedUser',
         on_delete=models.CASCADE,
         related_name='comments',
         verbose_name='автор',
