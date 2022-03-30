@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     # Наши приложения
     'reviews',
     'api',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -123,3 +124,9 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=365),
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
+
+AUTH_USER_MODEL = 'users.User'
+
+USER = 'user'
+MODERATOR = 'moderator'
+ADMIN = 'admin'
