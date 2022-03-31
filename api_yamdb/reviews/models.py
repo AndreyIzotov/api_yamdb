@@ -5,6 +5,7 @@ from reviews.settings import (
     FACTOR_FOR_REVIEW,
     FACTOR_FOR_COMMENT
 )
+from users.models import User
 
 
 class CreatedModel(models.Model):
@@ -17,11 +18,6 @@ class CreatedModel(models.Model):
 
     class Meta:
         abstract = True
-
-
-class CreatedUser(models.Model):
-    """Модель пользователя."""
-    pass
 
 
 class Category(models.Model):
@@ -49,7 +45,7 @@ class Review(CreatedModel):
         help_text='Произведение, к которому относится отзыв'
     )
     author = models.ForeignKey(
-        'CreatedUser',
+        User,
         on_delete=models.CASCADE,
         related_name='reviews',
         verbose_name='автор',
@@ -77,7 +73,7 @@ class Comment(CreatedModel):
         help_text='Отзыв, к которому относится комментарий'
     )
     author = models.ForeignKey(
-        'CreatedUser',
+        User,
         on_delete=models.CASCADE,
         related_name='comments',
         verbose_name='автор',

@@ -4,9 +4,9 @@ from itertools import islice
 
 from django.core.management.base import BaseCommand  # , CommandError
 
+from users.models import User
 from reviews.models import (
     Category,
-    CreatedUser,
     Comment,
     Genre,
     Title,
@@ -32,7 +32,7 @@ class Command(BaseCommand):
             ) as f:
                 reader = csv.reader(f)
                 for row in islice(reader, 1, None):
-                    _, created = CreatedUser.objects.get_or_create(
+                    _, created = User.objects.get_or_create(
                         id=row[0],
                         username=row[1],
                         email=row[2],
