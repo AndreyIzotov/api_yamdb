@@ -2,4 +2,4 @@ import uuid
 
 
 def generate_confirmation_code():
-    return uuid.uuid1()
+    return uuid.uuid4()
