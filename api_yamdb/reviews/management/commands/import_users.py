@@ -4,7 +4,7 @@ from itertools import islice
 
 from django.core.management.base import BaseCommand  # , CommandError
 
-from reviews.models import Comment
+from users.models import User
 
 
 cwd = os.getcwd()
@@ -17,22 +17,24 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         try:
-            # Импорт comments.csv
+            # Импорт users.csv
             with open(
-                'static/data/comments.csv',
+                'static/data/users.csv',
                 'r',
                 newline=''
             ) as f:
                 reader = csv.reader(f)
                 for row in islice(reader, 1, None):
-                    _, created = Comment.objects.get_or_create(
+                    _, created = User.objects.get_or_create(
                         id=row[0],
-                        review_id=int(row[1]),
-                        text=row[2],
-                        author_id=int(row[3]),
-                        pub_date=row[4]
+                        username=row[1],
+                        email=row[2],
+                        role=row[3],
+                        bio=row[4],
+                        first_name=row[5],
+                        last_name=row[6]
                     )
             self.stdout.write(
-                self.style.SUCCESS(u'Импорт comments.csv завершён!'))
+                self.style.SUCCESS(u'Импорт users.csv завершён!'))
         except Exception as error:
             self.stdout.write(self.style.WARNING(error))
