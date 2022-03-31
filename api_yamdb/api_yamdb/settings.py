@@ -130,3 +130,10 @@ AUTH_USER_MODEL = 'users.User'
 USER = 'user'
 MODERATOR = 'moderator'
 ADMIN = 'admin'
+
+FROM_EMAIL = 'mail@yamdb.com'
+
+#  подключаем движок filebased.EmailBackend
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+# указываем директорию, в которую будут складываться файлы писем
+EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')

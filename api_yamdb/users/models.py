@@ -2,7 +2,6 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
 
-from .confirmation_code import generate_confirmation_code
 from .managers import UserManager
 
 
@@ -19,41 +18,44 @@ class User(AbstractBaseUser, PermissionsMixin):
                                 blank=True,
                                 null=True,
                                 default='None',
+                                verbose_name='Юзернейм',
                                 )
 
     bio = models.CharField(
         max_length=1000,
         null=True,
-        verbose_name='Биография'
+        verbose_name='Биография',
     )
 
-    confirmation_code = models.CharField(
+    verification_code = models.CharField(
         max_length=100,
         null=True,
         verbose_name='Код подтверждения',
-        default=generate_confirmation_code()
     )
 
     role = models.CharField(
         max_length=50,
         choices=ROLES_CHOICES,
         default=settings.USER,
-        verbose_name='Роль'
+        verbose_name='Роль',
     )
 
     email = models.EmailField(
         max_length=255,
         unique=True,
+        verbose_name='Почта',
     )
 
     first_name = models.CharField(max_length=40,
                                   blank=True,
                                   null=True,
+                                  verbose_name='Имя',
                                   )
 
     last_name = models.CharField(max_length=40,
                                  blank=True,
                                  null=True,
+                                 verbose_name='Фамилия',
                                  )
 
     is_superuser = models.BooleanField(default=False)

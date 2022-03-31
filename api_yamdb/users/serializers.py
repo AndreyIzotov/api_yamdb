@@ -5,7 +5,18 @@ from .models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
-    pass
+    email = serializers.EmailField()
+
+    class Meta:
+        model = User
+        fields = (
+            'username', 'email', 'first_name', 'last_name', 'bio', 'role')
+        read_only_fields = ('role',)
+
+    def validate_username(self, value):
+        if value == 'me':
+            raise serializers.ValidationError('"me" is invalid username')
+        return value
 
 
 class SignUpSerializer(serializers.ModelSerializer):
@@ -31,7 +42,8 @@ class TokenSerializer(serializers.ModelSerializer):
     verification_code = serializers.CharField(max_length=200, required=True)
 
     class Meta:
-        fields = ('username', 'confirmation_code')
+        fields = ('username', 'verification_code')
+        model = User
 
     def validate_username(self, value):
         if not User.objects.filter(username=value).exists():
