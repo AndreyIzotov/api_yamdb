@@ -1,35 +1,18 @@
-from django.contrib.auth.models import BaseUserManager
+from django.conf import settings
+from django.contrib.auth.models import UserManager
 
 
-class UserManager(BaseUserManager):
+class UserManager(UserManager):
     """Менеджер пользователей"""
-    def create_user(self, email, username, password=None):
+    def create_user(self, username, email, password, **extra_fields):
         if not email:
-            raise ValueError('Users must have an email address')
+            raise ValueError('Требуется Email')
         if username == 'me':
-            raise ValueError('"me" is invalid username')
-        email = self.normalize_email(email)
-        user = self.model(email=email,
-                          is_staff=False,
-                          is_admin=False,
-                          is_superuser=False,
-                          username=username
-                          )
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
+            raise ValueError('"me" не допустимый юзернейм')
+        return super().create_user(
+            username, email=email, password=password, **extra_fields)
 
-    def create_superuser(self, email, username, password=None):
-        if not email:
-            raise ValueError('Users must have an email address')
-        email = self.normalize_email(email)
-
-        user = self.model(email=email,
-                          is_staff=True,
-                          is_admin=True,
-                          is_superuser=True,
-                          username=username,
-                          role='admin')
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
+    def create_superuser(
+            self, username, email, password, role, **extra_fields):
+        return super().create_superuser(
+            username, email, password, role=settings.ADMIN, **extra_fields)
