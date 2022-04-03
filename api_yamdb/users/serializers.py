@@ -15,7 +15,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     def validate_username(self, value):
         if value == 'me':
-            raise serializers.ValidationError('"me" is invalid username')
+            raise serializers.ValidationError('"me" не допустимый юзернейм')
         return value
 
 
@@ -28,24 +28,24 @@ class SignUpSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        fields = ('username', 'email')
+        fields = ('username', 'email',)
         model = User
 
     def validate_username(self, value):
         if value == 'me':
-            raise serializers.ValidationError('"me" is invalid username')
+            raise serializers.ValidationError('"me" не допустимый юзернейм')
         return value
 
 
 class TokenSerializer(serializers.ModelSerializer):
     username = serializers.CharField(max_length=200, required=True)
-    verification_code = serializers.CharField(max_length=200, required=True)
+    confirmation_code = serializers.CharField(max_length=200, required=True)
 
     class Meta:
-        fields = ('username', 'verification_code')
+        fields = ('username', 'confirmation_code')
         model = User
 
     def validate_username(self, value):
         if not User.objects.filter(username=value).exists():
-            raise exceptions.NotFound(f'There is no user {value}')
+            raise exceptions.NotFound(f'Нет такого пользователя {value}')
         return value

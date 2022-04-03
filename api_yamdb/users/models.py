@@ -4,15 +4,15 @@ from django.db import models
 
 from .managers import UserManager
 
+ROLES_CHOICES = [
+    (settings.USER, 'user'),
+    (settings.MODERATOR, 'moderator'),
+    (settings.ADMIN, 'admin'),
+]
+
 
 class User(AbstractBaseUser, PermissionsMixin):
     """Кастомная модель User с собственными полями"""
-
-    ROLES_CHOICES = [
-        (settings.USER, 'user'),
-        (settings.MODERATOR, 'moderator'),
-        (settings.ADMIN, 'admin'),
-    ]
 
     username = models.CharField(max_length=50,
                                 blank=True,
@@ -27,7 +27,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name='Биография',
     )
 
-    verification_code = models.CharField(
+    confirmation_code = models.CharField(
         max_length=100,
         null=True,
         verbose_name='Код подтверждения',
@@ -37,6 +37,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         max_length=50,
         choices=ROLES_CHOICES,
         default=settings.USER,
+        blank=False,
+        null=False,
         verbose_name='Роль',
     )
 

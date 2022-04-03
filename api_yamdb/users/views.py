@@ -30,10 +30,10 @@ class SignUpAPI(APIView):
                 serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        verification_code = default_token_generator.make_token(user)
+        confirmation_code = default_token_generator.make_token(user)
         send_mail(
             'Подтверждение регистрации на YaMDB',
-            f'Код подтверждения {verification_code}',
+            f'Код подтверждения {confirmation_code}',
             settings.FROM_EMAIL,
             [serializer.data['email']],
         )
@@ -55,9 +55,9 @@ class GetTokenAPI(APIView):
         user = get_object_or_404(
             User, username=serializer.data['username'])
         if not default_token_generator.check_token(
-                user, serializer.data['verification_code']):
+                user, serializer.data['confirmation_code']):
             return Response(
-                {'verification_code': 'Неверный код подтверждения'},
+                {'confirmation_code': 'Неверный код подтверждения'},
                 status=status.HTTP_400_BAD_REQUEST
             )
         access_token = AccessToken.for_user(user)
