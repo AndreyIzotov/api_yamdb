@@ -76,6 +76,7 @@ class UsersViewSet(viewsets.ModelViewSet):
     pagination_class = LimitOffsetPagination
 
     @action(detail=False, permission_classes=(IsAuthenticated,),
+            serializer_class=UserSerializer,
             methods=['get', 'patch', 'delete'], url_path='me')
     def get_or_update_self(self, request):
         if request.method != 'GET':

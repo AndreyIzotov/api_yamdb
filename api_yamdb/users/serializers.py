@@ -17,7 +17,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = (
             'username', 'email', 'first_name', 'last_name', 'bio', 'role')
-        read_only_fields = ('role',)
+        read_only_fields = ('role', )
 
     def validate_username(self, value):
         if value == 'me':
