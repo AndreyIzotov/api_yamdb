@@ -1,7 +1,7 @@
 from rest_framework import exceptions, serializers
 from rest_framework.validators import UniqueValidator
 
-from .models import User
+from .models import ROLES_CHOICES, User
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -11,13 +11,35 @@ class UserSerializer(serializers.ModelSerializer):
     username = serializers.CharField(
         required=True, validators=[UniqueValidator(
             queryset=User.objects.all()), ],)
-    role = serializers.CharField(required=False)
+    role = serializers.ChoiceField(required=False,
+                                   choices=ROLES_CHOICES)
 
     class Meta:
         model = User
         fields = (
             'username', 'email', 'first_name', 'last_name', 'bio', 'role')
-        read_only_fields = ('role', )
+
+    def validate_username(self, value):
+        if value == 'me':
+            raise serializers.ValidationError('"me" не допустимый юзернейм')
+        return value
+
+
+class MeSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(
+        required=True, validators=[UniqueValidator(
+            queryset=User.objects.all()), ],)
+    username = serializers.CharField(
+        required=True, validators=[UniqueValidator(
+            queryset=User.objects.all()), ],)
+    role = serializers.ChoiceField(required=False,
+                                   choices=ROLES_CHOICES,
+                                   read_only=True)
+
+    class Meta:
+        model = User
+        fields = (
+            'username', 'email', 'first_name', 'last_name', 'bio', 'role')
 
     def validate_username(self, value):
         if value == 'me':
