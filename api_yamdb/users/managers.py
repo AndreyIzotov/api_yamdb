@@ -13,6 +13,6 @@ class UserManager(UserManager):
             username, email=email, password=password, **extra_fields)
 
     def create_superuser(
-            self, username, email, password, role, **extra_fields):
+            self, username, email, password, **extra_fields):
         return super().create_superuser(
-            username, email, password, role=settings.ADMIN, **extra_fields)
+            username, email, password, **extra_fields)

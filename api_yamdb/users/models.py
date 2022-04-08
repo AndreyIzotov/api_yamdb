@@ -2,12 +2,14 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
 
+from .confirmation_code import generate_confirmation_code
 from .managers import UserManager
 
 ROLES_CHOICES = [
     (settings.USER, 'user'),
     (settings.MODERATOR, 'moderator'),
     (settings.ADMIN, 'admin'),
+    (settings.SUPERUSER, 'superuser'),
 ]
 
 
@@ -31,6 +33,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         max_length=100,
         null=True,
         verbose_name='Код подтверждения',
+        default=generate_confirmation_code(),
     )
 
     role = models.CharField(
