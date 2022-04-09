@@ -50,7 +50,7 @@ class TitleViewSet(viewsets.ModelViewSet):
     pagination_class = PageNumberPagination
     filter_backends = [DjangoFilterBackend]
     filterset_class = TitlesFilter
-    permission_classes = [MainPermission] 
+    permission_classes = [MainPermission]
 
     def get_serializer_class(self):
         if self.action in ('create', 'update', 'partial_update'):
