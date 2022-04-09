@@ -1,5 +1,7 @@
 from django.db import models
 
+from .validators import year_title_validate
+
 
 class Categorie(models.Model):
     """Категория."""
@@ -30,11 +32,11 @@ class Genre(models.Model):
 class Title(models.Model):
     """Произведение."""
     name = models.CharField(max_length=200)
-    year = models.PositiveIntegerField()
+    year = models.PositiveIntegerField(validators=[year_title_validate])
     description = models.TextField(blank=True)
     category = models.ForeignKey(
         Categorie, on_delete=models.SET_NULL,
-        related_name="Titles",
+        related_name="titles",
         verbose_name='Категория',
         blank=False, null=True
     )
@@ -47,22 +49,3 @@ class Title(models.Model):
 
     def __str__(self):
         return f'{self.name} ({self.category})'
-
-
-class GenreTitle(models.Model):
-    """Жанры произведений."""
-    genre = models.ForeignKey(
-        Genre,
-        on_delete=models.CASCADE,
-        related_name='genre',
-        verbose_name='Жанр',
-    )
-    title = models.ForeignKey(
-        Title, on_delete=models.CASCADE,
-        related_name='title',
-        verbose_name='Произведение'
-    )
-
-    class Meta:
-        verbose_name = 'Жанр произведения'
-        verbose_name_plural = 'Жанры произведения'

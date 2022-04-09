@@ -25,8 +25,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # Сторонние библиотеки
     'rest_framework',
+    'django_filters',
     # Наши приложения
-    'title',
+    'titles',
     'reviews',
     'api',
     'users',

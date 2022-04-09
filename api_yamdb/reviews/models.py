@@ -5,7 +5,7 @@ from reviews.settings import (
     FACTOR_FOR_REVIEW,
     FACTOR_FOR_COMMENT
 )
-from title.models import Title
+from titles.models import Title
 from users.models import User
 
 

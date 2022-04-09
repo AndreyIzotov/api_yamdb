@@ -2,7 +2,7 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
 from reviews.models import Review, Comment
-from title.models import Title
+from titles.models import Title
 
 
 class GetTitleDefault:
