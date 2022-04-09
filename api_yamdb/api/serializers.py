@@ -5,14 +5,6 @@ from reviews.models import Review, Comment
 from title.models import Title
 
 
-# class TitleSerializer(serializers.ModelSerializer):
-#    """Сериализатор для модели Title."""
-#    rating = serializers.SerializerMethodField()
-#
-#    class Meta:
-#        model = Title
-#        fields = '__all__'
-
 class GetTitleDefault:
     requires_context = True
 

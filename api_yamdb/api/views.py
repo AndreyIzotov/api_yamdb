@@ -11,11 +11,6 @@ class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.ReviewSerializer
     pagination_class = LimitOffsetPagination
 
-    # def get_serializer_context(self):
-    #     context = super(ReviewViewSet, self).get_serializer_context()
-    #     context.update({'title': self.kwargs.get('title_id')})
-    #     return context
-
     def get_title(self):
         return get_object_or_404(Title, id=self.kwargs.get('title_id'))
 
