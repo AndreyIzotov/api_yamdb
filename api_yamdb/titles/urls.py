@@ -10,3 +10,4 @@ router_v1.register('titles', TitleViewSet, basename='title')
 urlpatterns = [
     path('v1/', include(router_v1.urls)),
 ]
+
