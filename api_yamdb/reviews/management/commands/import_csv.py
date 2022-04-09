@@ -5,13 +5,8 @@ from itertools import islice
 from django.core.management.base import BaseCommand  # , CommandError
 
 from users.models import User
-from reviews.models import (
-    Category,
-    Comment,
-    Genre,
-    Title,
-    Review
-)
+from reviews.models import Comment, Title, Review
+from title.models import Categorie, Genre, GenreTitle
 
 
 cwd = os.getcwd()
@@ -51,7 +46,7 @@ class Command(BaseCommand):
             ) as f:
                 reader = csv.reader(f)
                 for row in islice(reader, 1, None):
-                    _, created = Category.objects.get_or_create(
+                    _, created = Categorie.objects.get_or_create(
                         id=row[0],
                         name=row[1],
                         slug=row[2]
@@ -85,7 +80,7 @@ class Command(BaseCommand):
                         id=row[0],
                         name=row[1],
                         year=row[2],
-                        category=row[3]
+                        category_id=row[3]
                     )
             self.stdout.write(
                 self.style.SUCCESS(u'Импорт titles.csv завершён!'))
@@ -101,7 +96,7 @@ class Command(BaseCommand):
                         id=row[0],
                         title_id=row[1],
                         text=row[2],
-                        author=row[3],
+                        author_id=row[3],
                         score=row[4],
                         pub_date=row[5]
                     )
@@ -124,5 +119,23 @@ class Command(BaseCommand):
                     )
             self.stdout.write(
                 self.style.SUCCESS(u'Импорт comments.csv завершён!'))
+            # Импорт genre_title.csv
+            with open(
+                'static/data/genre_title.csv',
+                'r',
+                newline=''
+            ) as f:
+                reader = csv.reader(f)
+                for row in islice(reader, 1, None):
+                    _, created = GenreTitle.objects.get_or_create(
+                        id=row[0],
+                        title_id=row[1],
+                        genre_id=row[2]
+                    )
+            self.stdout.write(
+                self.style.SUCCESS(u'Импорт genre_title.csv завершён!'))
+            self.stdout.write(
+                self.style.SUCCESS(u'Операция завершена'))
+
         except Exception as error:
             self.stdout.write(self.style.WARNING(error))

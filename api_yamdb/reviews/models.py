@@ -5,6 +5,7 @@ from reviews.settings import (
     FACTOR_FOR_REVIEW,
     FACTOR_FOR_COMMENT
 )
+from title.models import Title
 from users.models import User
 
 
@@ -20,25 +21,10 @@ class CreatedModel(models.Model):
         abstract = True
 
 
-class Category(models.Model):
-    """Модель категорий."""
-    pass
-
-
-class Genre(models.Model):
-    """Модель жанров."""
-    pass
-
-
-class Title(models.Model):
-    """Модель произведения."""
-    pass
-
-
 class Review(CreatedModel):
     """Модель отзыва."""
     title = models.ForeignKey(
-        'Title',
+        Title,
         on_delete=models.CASCADE,
         related_name='reviews',
         verbose_name='произведение',
@@ -55,6 +41,12 @@ class Review(CreatedModel):
     text = models.TextField('Текст', help_text='Текст нового отзыва')
 
     class Meta(CreatedModel.Meta):
+        constraints = [
+            models.UniqueConstraint(
+                fields=['author', 'title'],
+                name='unique_review'
+            )
+        ]
         verbose_name = 'отзыв'
         verbose_name_plural = 'отзывы'
         ordering = ('pub_date',)
@@ -66,7 +58,7 @@ class Review(CreatedModel):
 class Comment(CreatedModel):
     """Модель комментария."""
     review = models.ForeignKey(
-        'Review',
+        Review,
         on_delete=models.CASCADE,
         related_name='comments',
         verbose_name='отзыв',

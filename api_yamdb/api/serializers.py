@@ -1,15 +1,24 @@
 from rest_framework import serializers
+from rest_framework.validators import UniqueTogetherValidator
 
-from reviews.models import Title, Review, Comment
+from reviews.models import Review, Comment
+from title.models import Title
 
 
-class TitleSerializer(serializers.ModelSerializer):
-    """Сериализатор для модели Title."""
-    rating = serializers.SerializerMethodField()
+# class TitleSerializer(serializers.ModelSerializer):
+#    """Сериализатор для модели Title."""
+#    rating = serializers.SerializerMethodField()
+#
+#    class Meta:
+#        model = Title
+#        fields = '__all__'
 
-    class Meta:
-        model = Title
-        fields = '__all__'
+class GetTitleDefault:
+    requires_context = True
+
+    def __call__(self, serializer):
+        return (serializer.context.get('request')
+                .parser_context.get('kwargs').get('title_id'))
 
 
 class ReviewSerializer(serializers.ModelSerializer):
@@ -19,10 +28,23 @@ class ReviewSerializer(serializers.ModelSerializer):
         slug_field='username',
         default=serializers.CurrentUserDefault()
     )
+    title = serializers.SlugRelatedField(
+        queryset=Title.objects.all(),
+        slug_field='id',
+        default=GetTitleDefault()
+    )
 
     class Meta:
-        fields = '__all__'
         model = Review
+        fields = '__all__'
+        read_only_fields = ('author', 'title')
+        validators = [
+            UniqueTogetherValidator(
+                queryset=Review.objects.all(),
+                fields=('author', 'title'),
+                message='У вас уже есть отзыв!'
+            )
+        ]
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -36,4 +58,4 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = '__all__'
-        read_only_fields = ('review_id',)
+        read_only_fields = ('review',)

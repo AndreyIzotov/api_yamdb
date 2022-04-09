@@ -1,4 +1,5 @@
 # from typing_extensions import Required
+from django.db.models import Avg
 from rest_framework import serializers
 
 from .models import Categorie, Genre, Title, GenreTitle
@@ -29,12 +30,14 @@ class GenreTitleSerializer(serializers.ModelSerializer):
 class TitleListSerializer(serializers.ModelSerializer):
     category = CategorieSerializer()
     genre = GenreSerializer(many=True)
+    rating = serializers.SerializerMethodField()
+
+    def get_rating(self, obj):
+        return obj.reviews.aggregate(Avg('score')).get('score__avg')
 
     class Meta:
         model = Title
-        fields = (
-            'id', 'name', 'year', 'rating', 'description', 'genre', 'category'
-        )
+        fields = '__all__'
 
 
 class TitleSerializerPost(serializers.ModelSerializer):
@@ -46,7 +49,8 @@ class TitleSerializerPost(serializers.ModelSerializer):
     class Meta:
         model = Title
         fields = ('id', 'name', 'year', 'description', 'category')
-    #def create(self, validated_data):
+
+    # def create(self, validated_data):
     #    genres = validated_data.pop('genre')
     #    title = Title.objects.create(**validated_data)
     #    for genre in genres:
