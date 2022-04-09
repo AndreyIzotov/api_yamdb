@@ -3,6 +3,7 @@ from rest_framework import viewsets
 from rest_framework.pagination import LimitOffsetPagination
 
 from api import serializers
+from api.permissions import IsAuthorOrReadOnly
 from reviews.models import Review, Title
 
 
@@ -10,6 +11,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
     """Вьюсет для работы с отзывами."""
     serializer_class = serializers.ReviewSerializer
     pagination_class = LimitOffsetPagination
+    permission_classes = (IsAuthorOrReadOnly,)
 
     def get_title(self):
         return get_object_or_404(Title, id=self.kwargs.get('title_id'))
@@ -25,6 +27,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
 class CommentViewSet(viewsets.ModelViewSet):
     """Вьюсет для работы с комментариями."""
     serializer_class = serializers.CommentSerializer
+    permission_classes = (IsAuthorOrReadOnly,)
 
     def get_review(self):
         return get_object_or_404(
