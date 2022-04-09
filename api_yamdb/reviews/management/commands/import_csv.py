@@ -1,3 +1,4 @@
+import codecs
 import csv
 import os
 from itertools import islice
@@ -23,6 +24,7 @@ class Command(BaseCommand):
             with open(
                 'static/data/users.csv',
                 'r',
+                "utf_8_sig",
                 newline=''
             ) as f:
                 reader = csv.reader(f)
