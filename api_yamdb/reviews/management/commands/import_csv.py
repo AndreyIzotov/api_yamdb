@@ -1,14 +1,11 @@
-import codecs
 import csv
 import os
 from itertools import islice
 
 from django.core.management.base import BaseCommand  # , CommandError
-
-from users.models import User
-from reviews.models import Comment, Title, Review
+from reviews.models import Comment, Review, Title
 from title.models import Categorie, Genre, GenreTitle
-
+from users.models import User
 
 cwd = os.getcwd()
 files = os.listdir(cwd)
