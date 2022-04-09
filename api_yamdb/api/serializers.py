@@ -6,6 +6,7 @@ from title.models import Title
 
 
 class GetTitleDefault:
+    "Класс для получения значения title_id из контекста."
     requires_context = True
 
     def __call__(self, serializer):

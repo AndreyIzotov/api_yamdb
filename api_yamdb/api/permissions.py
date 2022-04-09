@@ -4,6 +4,7 @@ from rest_framework import permissions
 class IsAuthorOrReadOnly(permissions.BasePermission):
     """Право доступа для аутентифицированного пользователя.
     Право чтения для анонима.
+    Остальные права в соответствии с ролями.
     """
     def has_permission(self, request, view):
         return (
