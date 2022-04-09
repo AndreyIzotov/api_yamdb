@@ -24,7 +24,7 @@ class Command(BaseCommand):
             with open(
                 'static/data/users.csv',
                 'r',
-                "utf_8_sig",
+                encoding='utf-8',
                 newline=''
             ) as f:
                 reader = csv.reader(f)
