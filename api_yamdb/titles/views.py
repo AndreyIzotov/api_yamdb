@@ -7,14 +7,14 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework import filters
 
 
-from .filters import TitlesFilter
-from .permissions import IsAdminPermission, MainPermission
-from .models import Categorie, Genre, Title
-from .serializers import CategorieSerializer, GenreSerializer
-from .serializers import ViewsTitleSerializer, EditTitleSerializer
+from titles.filters import TitlesFilter
+from titles.permissions import IsAdminPermission, MainPermission
+from titles.models import Categorie, Genre, Title
+from titles.serializers import (CategorieSerializer, GenreSerializer,
+                                ViewsTitleSerializer, EditTitleSerializer)
 
 
-class BasicForGenreСategorieViewSet(mixins.CreateModelMixin,
+class BasicForGenreCategorieViewSet(mixins.CreateModelMixin,
                                     mixins.ListModelMixin,
                                     mixins.DestroyModelMixin,
                                     viewsets.GenericViewSet):
@@ -30,12 +30,12 @@ class BasicForGenreСategorieViewSet(mixins.CreateModelMixin,
         return super().get_permissions()
 
 
-class GenreViewSet(BasicForGenreСategorieViewSet):
+class GenreViewSet(BasicForGenreCategorieViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
 
 
-class СategorieViewSet(BasicForGenreСategorieViewSet):
+class СategorieViewSet(BasicForGenreCategorieViewSet):
     queryset = Categorie.objects.all()
     serializer_class = CategorieSerializer
 

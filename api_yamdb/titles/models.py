@@ -1,6 +1,6 @@
 from django.db import models
 
-from .validators import year_title_validate
+from titles.validators import year_title_validate
 
 
 class Categorie(models.Model):
