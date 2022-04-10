@@ -1,17 +1,14 @@
 from django.db.models import Avg
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework import mixins
+from rest_framework import filters, mixins, viewsets
 from rest_framework.pagination import PageNumberPagination
-from rest_framework import filters
-
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from titles.filters import TitlesFilter
-from titles.permissions import IsAdminPermission, MainPermission
 from titles.models import Categorie, Genre, Title
-from titles.serializers import (CategorieSerializer, GenreSerializer,
-                                ViewsTitleSerializer, EditTitleSerializer)
+from titles.permissions import IsAdminPermission, MainPermission
+from titles.serializers import (CategorieSerializer, EditTitleSerializer,
+                                GenreSerializer, ViewsTitleSerializer)
 
 
 class BasicForGenreCategorieViewSet(mixins.CreateModelMixin,
