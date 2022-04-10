@@ -32,7 +32,7 @@ class GenreViewSet(BasicForGenreCategorieViewSet):
     serializer_class = GenreSerializer
 
 
-class СategorieViewSet(BasicForGenreCategorieViewSet):
+class CategoryViewSet(BasicForGenreCategorieViewSet):
     queryset = Categorie.objects.all()
     serializer_class = CategorieSerializer
 

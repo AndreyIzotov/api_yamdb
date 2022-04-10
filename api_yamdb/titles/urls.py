@@ -1,10 +1,10 @@
 from django.urls import include, path
 from rest_framework.routers import SimpleRouter
 
-from titles.views import GenreViewSet, TitleViewSet, СategorieViewSet
+from titles.views import CategoryViewSet, GenreViewSet, TitleViewSet
 
 router_v1 = SimpleRouter()
-router_v1.register('categories', СategorieViewSet, basename='categorie')
+router_v1.register('categories', CategoryViewSet, basename='categorie')
 router_v1.register('genres', GenreViewSet, basename='genre')
 router_v1.register('titles', TitleViewSet, basename='title')
 urlpatterns = [
