@@ -4,7 +4,15 @@ from rest_framework.validators import UniqueValidator
 from .models import ROLES_CHOICES, User
 
 
-class UserSerializer(serializers.ModelSerializer):
+class ValidateUsernameSerializer(serializers.ModelSerializer):
+
+    def validate_username(self, value):
+        if value == 'me':
+            raise serializers.ValidationError('"me" не допустимый юзернейм')
+        return value
+
+
+class UserSerializer(ValidateUsernameSerializer):
     email = serializers.EmailField(
         required=True, validators=[UniqueValidator(
             queryset=User.objects.all()), ],)
@@ -19,13 +27,8 @@ class UserSerializer(serializers.ModelSerializer):
         fields = (
             'username', 'email', 'first_name', 'last_name', 'bio', 'role')
 
-    def validate_username(self, value):
-        if value == 'me':
-            raise serializers.ValidationError('"me" не допустимый юзернейм')
-        return value
 
-
-class MeSerializer(serializers.ModelSerializer):
+class MeSerializer(ValidateUsernameSerializer):
     email = serializers.EmailField(
         required=True, validators=[UniqueValidator(
             queryset=User.objects.all()), ],)
@@ -41,39 +44,20 @@ class MeSerializer(serializers.ModelSerializer):
         fields = (
             'username', 'email', 'first_name', 'last_name', 'bio', 'role')
 
-    def validate_username(self, value):
-        if value == 'me':
-            raise serializers.ValidationError('"me" не допустимый юзернейм')
-        return value
 
-
-class SignUpSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(
-        validators=[UniqueValidator(queryset=User.objects.all()), ],
-    )
-    email = serializers.EmailField(
-        validators=[UniqueValidator(queryset=User.objects.all()), ],
-    )
+class SignUpSerializer(ValidateUsernameSerializer):
+    username = serializers.CharField(required=True)
+    email = serializers.EmailField(required=True)
 
     class Meta:
         fields = ('username', 'email',)
         model = User
 
-    def validate_username(self, value):
-        if value == 'me':
-            raise serializers.ValidationError('"me" не допустимый юзернейм')
-        return value
 
-
-class TokenSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(max_length=200, required=True)
+class TokenSerializer(ValidateUsernameSerializer):
+    username = serializers.CharField(max_length=150, required=True)
     confirmation_code = serializers.CharField(max_length=200, required=True)
 
     class Meta:
         fields = ('username', 'confirmation_code')
         model = User
-
-    def validate_username(self, value):
-        if not User.objects.filter(username=value).exists():
-            raise exceptions.NotFound(f'Нет такого пользователя {value}')
-        return value
