@@ -5,8 +5,8 @@ from titles.validators import year_title_validate
 
 class Categorie(models.Model):
     """Категория."""
-    name = models.CharField(max_length=200)
-    slug = models.SlugField(unique=True)
+    name = models.CharField(max_length=256)
+    slug = models.SlugField(max_length=50, unique=True)
 
     class Meta:
         verbose_name = 'Категория'
@@ -18,8 +18,8 @@ class Categorie(models.Model):
 
 class Genre(models.Model):
     """Жанр."""
-    name = models.CharField(max_length=200)
-    slug = models.SlugField(unique=True)
+    name = models.CharField(max_length=256)
+    slug = models.SlugField(max_length=50, unique=True)
 
     class Meta:
         verbose_name = 'Жанр'
@@ -31,7 +31,7 @@ class Genre(models.Model):
 
 class Title(models.Model):
     """Произведение."""
-    name = models.CharField(max_length=200)
+    name = models.TextField()
     year = models.PositiveIntegerField(validators=[year_title_validate])
     description = models.TextField(blank=True)
     category = models.ForeignKey(

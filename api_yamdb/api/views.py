@@ -1,10 +1,14 @@
+from django.db.models import Avg
 from django.shortcuts import get_object_or_404
-from rest_framework import viewsets
+from rest_framework import viewsets, filters, mixins
 from rest_framework.pagination import LimitOffsetPagination
+from django_filters.rest_framework import DjangoFilterBackend
 
 from api import serializers
-from api.permissions import IsAuthorOrReadOnly
+from api.permissions import IsAuthorOrReadOnly, MainPermission
+from api.filters import TitlesFilter
 from reviews.models import Review, Title
+from titles.models import Categorie, Genre, Title
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
@@ -41,3 +45,37 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user, review=self.get_review())
+
+
+class BasicForGenreCategorieViewSet(mixins.CreateModelMixin,
+                                    mixins.ListModelMixin,
+                                    mixins.DestroyModelMixin,
+                                    viewsets.GenericViewSet):
+    pagination_class = LimitOffsetPagination
+    permission_classes = [MainPermission]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name']
+    lookup_field = 'slug'
+
+
+class GenreViewSet(BasicForGenreCategorieViewSet):
+    queryset = Genre.objects.all()
+    serializer_class = serializers.GenreSerializer
+
+
+class CategoryViewSet(BasicForGenreCategorieViewSet):
+    queryset = Categorie.objects.all()
+    serializer_class = serializers.CategorieSerializer
+
+
+class TitleViewSet(viewsets.ModelViewSet):
+    queryset = Title.objects.annotate(rating=Avg('reviews__score'))
+    pagination_class = LimitOffsetPagination
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = TitlesFilter
+    permission_classes = [MainPermission]
+
+    def get_serializer_class(self):
+        if self.action in ('create', 'update', 'partial_update'):
+            return serializers.EditTitleSerializer
+        return serializers.ViewsTitleSerializer
