@@ -51,6 +51,7 @@ class BasicForGenreCategorieViewSet(mixins.CreateModelMixin,
                                     mixins.ListModelMixin,
                                     mixins.DestroyModelMixin,
                                     viewsets.GenericViewSet):
+    """Базовый вьюсет для работы с категориями и жанрами."""
     pagination_class = LimitOffsetPagination
     permission_classes = [IsAdminOrReadOnly]
     filter_backends = [filters.SearchFilter]
@@ -59,16 +60,19 @@ class BasicForGenreCategorieViewSet(mixins.CreateModelMixin,
 
 
 class GenreViewSet(BasicForGenreCategorieViewSet):
+    """Вьюсет для работы с жанрами."""
     queryset = Genre.objects.all()
     serializer_class = serializers.GenreSerializer
 
 
 class CategoryViewSet(BasicForGenreCategorieViewSet):
+    """Вьюсет для работы с категориями."""
     queryset = Categorie.objects.all()
     serializer_class = serializers.CategorieSerializer
 
 
 class TitleViewSet(viewsets.ModelViewSet):
+    """Вьюсет для работы с произведениями."""
     queryset = Title.objects.annotate(rating=Avg('reviews__score'))
     pagination_class = LimitOffsetPagination
     filter_backends = [DjangoFilterBackend]
