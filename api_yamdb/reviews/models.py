@@ -19,6 +19,7 @@ class CreatedModel(models.Model):
 
     class Meta:
         abstract = True
+        ordering = ['-pub_date']
 
 
 class Review(CreatedModel):
