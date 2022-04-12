@@ -6,8 +6,6 @@ class UserManager(UserManager):
     def create_user(self, username, email, password, **extra_fields):
         if not email:
             raise ValueError('Требуется Email')
-        if username == 'me':
-            raise ValueError('"me" не допустимый юзернейм')
         return super().create_user(
             username, email=email, password=password, **extra_fields)
 

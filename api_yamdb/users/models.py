@@ -1,30 +1,40 @@
-from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.core.validators import RegexValidator
 from django.db import models
 
-from .confirmation_code import generate_confirmation_code
-from .managers import UserManager
+from users.confirmation_code import generate_confirmation_code
+from users.managers import UserManager
+
+
+class UserRole:
+    USER = 'user'
+    MODERATOR = 'moderator'
+    ADMIN = 'admin'
+    SUPERUSER = 'superuser'
+
 
 ROLES_CHOICES = [
-    (settings.USER, 'user'),
-    (settings.MODERATOR, 'moderator'),
-    (settings.ADMIN, 'admin'),
-    (settings.SUPERUSER, 'superuser'),
+    (UserRole.USER, 'user'),
+    (UserRole.MODERATOR, 'moderator'),
+    (UserRole.ADMIN, 'admin'),
+    (UserRole.SUPERUSER, 'superuser'),
 ]
 
 
 class User(AbstractBaseUser, PermissionsMixin):
     """Кастомная модель User с собственными полями"""
 
+    username_validator = RegexValidator(r'^[\w.@+-]+')
+
     username = models.CharField(max_length=50,
                                 blank=True,
                                 null=True,
                                 default='None',
                                 verbose_name='Юзернейм',
+                                validators=[username_validator],
                                 )
 
-    bio = models.CharField(
-        max_length=1000,
+    bio = models.TextField(
         null=True,
         verbose_name='Биография',
     )
@@ -39,25 +49,23 @@ class User(AbstractBaseUser, PermissionsMixin):
     role = models.CharField(
         max_length=50,
         choices=ROLES_CHOICES,
-        default=settings.USER,
-        blank=False,
-        null=False,
+        default=UserRole.USER,
         verbose_name='Роль',
     )
 
     email = models.EmailField(
-        max_length=255,
+        max_length=254,
         unique=True,
         verbose_name='Почта',
     )
 
-    first_name = models.CharField(max_length=40,
+    first_name = models.CharField(max_length=150,
                                   blank=True,
                                   null=True,
                                   verbose_name='Имя',
                                   )
 
-    last_name = models.CharField(max_length=40,
+    last_name = models.CharField(max_length=150,
                                  blank=True,
                                  null=True,
                                  verbose_name='Фамилия',
@@ -68,6 +76,18 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     last_login = models.DateTimeField(null=True, blank=True)
+
+    @property
+    def admin(self):
+        return self.role == UserRole.ADMIN or self.is_admin
+
+    @property
+    def superuser(self):
+        return self.role == UserRole.SUPERUSER or self.is_admin
+
+    @property
+    def moderator(self):
+        return self.role == UserRole.MODERATOR or self.is_staff
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ('username',)
