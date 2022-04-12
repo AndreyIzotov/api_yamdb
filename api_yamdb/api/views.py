@@ -24,6 +24,7 @@ from .serializers import (CategorieSerializer, CommentSerializer,
 
 User = get_user_model()
 
+
 class ReviewViewSet(viewsets.ModelViewSet):
     """Вьюсет для работы с отзывами."""
     serializer_class = ReviewSerializer
@@ -122,7 +123,7 @@ def SignUpAPI(request):
     User.objects.create(username=username, email=email)
     confirmation_code = generate_confirmation_code()
     User.objects.filter(email=email).update(
-        confirmation_code = confirmation_code
+        confirmation_code=confirmation_code
     )
     send_mail(
         'Подтверждение регистрации на YaMDB',
@@ -136,13 +137,15 @@ def SignUpAPI(request):
         status=status.HTTP_200_OK
     )
 
+
 @api_view(['POST'])
 def GetTokenAPI(request):
     serializer = TokenSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     user = get_object_or_404(
         User, username=serializer.validated_data['username'])
-    if user.confirmation_code != serializer.validated_data['confirmation_code']:
+    if (user.confirmation_code
+       != serializer.validated_data['confirmation_code']):
         return Response(
             {'confirmation_code': 'Неверный код подтверждения'},
             status=status.HTTP_400_BAD_REQUEST

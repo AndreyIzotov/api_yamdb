@@ -8,6 +8,7 @@ from users.models import ROLES_CHOICES
 
 User = get_user_model()
 
+
 class GetTitleDefault:
     "Класс для получения значения title_id из контекста."
     requires_context = True

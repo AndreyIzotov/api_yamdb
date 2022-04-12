@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.core.validators import RegexValidator
 from django.db import models
@@ -8,10 +7,10 @@ from .managers import UserManager
 
 
 class UserRole:
-        USER = 'user'
-        MODERATOR = 'moderator'
-        ADMIN = 'admin'
-        SUPERUSER = 'superuser'
+    USER = 'user'
+    MODERATOR = 'moderator'
+    ADMIN = 'admin'
+    SUPERUSER = 'superuser'
 
 
 ROLES_CHOICES = [
