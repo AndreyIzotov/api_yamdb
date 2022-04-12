@@ -1,8 +1,12 @@
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from rest_framework.validators import UniqueTogetherValidator
+from rest_framework.validators import UniqueTogetherValidator, UniqueValidator
 
-from reviews.models import Review, Comment
+from reviews.models import Comment, Review
 from titles.models import Categorie, Genre, Title
+from users.models import ROLES_CHOICES
+
+User = get_user_model()
 
 
 class GetTitleDefault:
@@ -101,3 +105,62 @@ class EditTitleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Title
         fields = ('id', 'name', 'year', 'description', 'category', 'genre')
+
+
+class ValidateUsernameSerializer(serializers.ModelSerializer):
+
+    def validate_username(self, value):
+        if value == 'me':
+            raise serializers.ValidationError('"me" не допустимый юзернейм')
+        return value
+
+
+class UserSerializer(ValidateUsernameSerializer):
+    email = serializers.EmailField(
+        required=True, validators=[UniqueValidator(
+            queryset=User.objects.all()), ],)
+    username = serializers.CharField(
+        required=True, validators=[UniqueValidator(
+            queryset=User.objects.all()), ],)
+    role = serializers.ChoiceField(required=False,
+                                   choices=ROLES_CHOICES)
+
+    class Meta:
+        model = User
+        fields = (
+            'username', 'email', 'first_name', 'last_name', 'bio', 'role')
+
+
+class MeSerializer(ValidateUsernameSerializer):
+    email = serializers.EmailField(
+        required=True, validators=[UniqueValidator(
+            queryset=User.objects.all()), ],)
+    username = serializers.CharField(
+        required=True, validators=[UniqueValidator(
+            queryset=User.objects.all()), ],)
+    role = serializers.ChoiceField(required=False,
+                                   choices=ROLES_CHOICES,
+                                   read_only=True)
+
+    class Meta:
+        model = User
+        fields = (
+            'username', 'email', 'first_name', 'last_name', 'bio', 'role')
+
+
+class SignUpSerializer(ValidateUsernameSerializer):
+    username = serializers.CharField(required=True)
+    email = serializers.EmailField(required=True)
+
+    class Meta:
+        fields = ('username', 'email',)
+        model = User
+
+
+class TokenSerializer(ValidateUsernameSerializer):
+    username = serializers.CharField(max_length=150, required=True)
+    confirmation_code = serializers.CharField(max_length=200, required=True)
+
+    class Meta:
+        fields = ('username', 'confirmation_code')
+        model = User

@@ -1,17 +1,16 @@
-from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.core.validators import RegexValidator
 from django.db import models
 
-from .confirmation_code import generate_confirmation_code
-from .managers import UserManager
+from users.confirmation_code import generate_confirmation_code
+from users.managers import UserManager
 
 
 class UserRole:
-        USER = 'user'
-        MODERATOR = 'moderator'
-        ADMIN = 'admin'
-        SUPERUSER = 'superuser'
+    USER = 'user'
+    MODERATOR = 'moderator'
+    ADMIN = 'admin'
+    SUPERUSER = 'superuser'
 
 
 ROLES_CHOICES = [
