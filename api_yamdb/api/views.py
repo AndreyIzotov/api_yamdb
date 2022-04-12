@@ -5,7 +5,7 @@ from rest_framework.pagination import LimitOffsetPagination
 from django_filters.rest_framework import DjangoFilterBackend
 
 from api import serializers
-from api.permissions import IsAuthorOrReadOnly, MainPermission
+from api.permissions import IsAuthorOrReadOnly, IsAdminOrReadOnly
 from api.filters import TitlesFilter
 from reviews.models import Review, Title
 from titles.models import Categorie, Genre, Title
@@ -52,7 +52,7 @@ class BasicForGenreCategorieViewSet(mixins.CreateModelMixin,
                                     mixins.DestroyModelMixin,
                                     viewsets.GenericViewSet):
     pagination_class = LimitOffsetPagination
-    permission_classes = [MainPermission]
+    permission_classes = [IsAdminOrReadOnly]
     filter_backends = [filters.SearchFilter]
     search_fields = ['name']
     lookup_field = 'slug'
@@ -73,7 +73,7 @@ class TitleViewSet(viewsets.ModelViewSet):
     pagination_class = LimitOffsetPagination
     filter_backends = [DjangoFilterBackend]
     filterset_class = TitlesFilter
-    permission_classes = [MainPermission]
+    permission_classes = [IsAdminOrReadOnly]
 
     def get_serializer_class(self):
         if self.action in ('create', 'update', 'partial_update'):

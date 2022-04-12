@@ -29,7 +29,7 @@ class IsAdminPermission(permissions.BasePermission):
                      or request.user.is_superuser))
 
 
-class MainPermission(permissions.BasePermission):
+class IsAdminOrReadOnly(permissions.BasePermission):
 
     def has_permission(self, request, view):
         if request.method in permissions.SAFE_METHODS:
