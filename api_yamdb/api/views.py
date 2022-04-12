@@ -10,10 +10,10 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
+
 from reviews.models import Review, Title
 from titles.models import Categorie, Genre, Title
 from users.confirmation_code import generate_confirmation_code
-
 from .filters import TitlesFilter
 from .permissions import (IsAdminOrReadOnly, IsAdminPermission,
                           IsAuthorOrReadOnly, IsSuperuserPermission)
