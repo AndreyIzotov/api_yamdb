@@ -91,5 +91,22 @@ GET api/v1/titles/{title_id}/reviews/{review_id}/comments/
 ```
 
 
+### Наполнение базы
+
+Для наполнения базы из .csv файлов имеется команда python manage.py import_csv
+выполняющая импорт данных в следующем порядке:
+1. users.csv
+2. category.csv
+3. genre.csv
+4. titles.csv
+5. review.csv
+6. comments.csv
+7. genre_title.csv
+
+Образцы файлов расположены в папке /static.
+
+
 После запуска проекта описание работы и остальные примеры доступны по адресу http://127.0.0.1:8000/redoc/
 До запуска - в папке static файл redoc.html
+
+Authors - Андрей Изотов, Станислав Сопов, Кирилл Ярков
