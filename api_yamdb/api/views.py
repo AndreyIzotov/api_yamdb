@@ -12,8 +12,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
 
-from reviews.models import Review, Title
-from titles.models import Categorie, Genre, Title
+from reviews.models import Review, Title, Categorie, Genre, Title
 from users.confirmation_code import generate_confirmation_code
 from api.filters import TitlesFilter
 from api.permissions import (IsAdminOrReadOnly, IsAdminPermission,

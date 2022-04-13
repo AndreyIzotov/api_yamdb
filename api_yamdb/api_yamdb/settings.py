@@ -31,7 +31,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     # Наши приложения
-    'titles',
     'reviews',
     'api',
     'users',
