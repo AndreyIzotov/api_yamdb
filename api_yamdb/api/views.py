@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
+from django.db import IntegrityError
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
@@ -101,16 +102,16 @@ class TitleViewSet(viewsets.ModelViewSet):
 
 
 @api_view(['POST'])
-def SignUpAPI(request):
+def sign_up(request):
     serializer = SignUpSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     email = serializer.validated_data['email']
     username = serializer.validated_data['username']
     try:
-        User.objects.get(
+        User.objects.get_or_create(
             username=username,
             email=email)
-    except User.DoesNotExist:
+    except IntegrityError:
         if User.objects.filter(username=username).exists():
             return Response(
                 'Такой username уже есть',
@@ -121,7 +122,6 @@ def SignUpAPI(request):
                 'Такой email уже есть',
                 status=status.HTTP_400_BAD_REQUEST
             )
-    User.objects.create(username=username, email=email)
     confirmation_code = generate_confirmation_code()
     User.objects.filter(email=email).update(
         confirmation_code=confirmation_code
@@ -133,14 +133,14 @@ def SignUpAPI(request):
         [serializer.validated_data['email']],
     )
     return Response(
-        {'email': serializer.validated_data['email'],
-         'username': serializer.validated_data['username']},
+        {'email': email,
+         'username': username},
         status=status.HTTP_200_OK
     )
 
 
 @api_view(['POST'])
-def GetTokenAPI(request):
+def get_token(request):
     serializer = TokenSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     user = get_object_or_404(

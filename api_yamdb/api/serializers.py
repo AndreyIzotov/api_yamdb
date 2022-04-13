@@ -107,15 +107,7 @@ class EditTitleSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'year', 'description', 'category', 'genre')
 
 
-class ValidateUsernameSerializer(serializers.ModelSerializer):
-
-    def validate_username(self, value):
-        if value == 'me':
-            raise serializers.ValidationError('"me" не допустимый юзернейм')
-        return value
-
-
-class UserSerializer(ValidateUsernameSerializer):
+class UserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
         required=True, validators=[UniqueValidator(
             queryset=User.objects.all()), ],)
@@ -131,7 +123,7 @@ class UserSerializer(ValidateUsernameSerializer):
             'username', 'email', 'first_name', 'last_name', 'bio', 'role')
 
 
-class MeSerializer(ValidateUsernameSerializer):
+class MeSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
         required=True, validators=[UniqueValidator(
             queryset=User.objects.all()), ],)
@@ -148,19 +140,16 @@ class MeSerializer(ValidateUsernameSerializer):
             'username', 'email', 'first_name', 'last_name', 'bio', 'role')
 
 
-class SignUpSerializer(ValidateUsernameSerializer):
-    username = serializers.CharField(required=True)
-    email = serializers.EmailField(required=True)
+class SignUpSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=150, required=True)
+    email = serializers.EmailField(max_length=254, required=True)
 
-    class Meta:
-        fields = ('username', 'email',)
-        model = User
+    def validate_username(self, value):
+        if value == 'me':
+            raise serializers.ValidationError('"me" не допустимый юзернейм')
+        return value
 
 
-class TokenSerializer(ValidateUsernameSerializer):
+class TokenSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=150, required=True)
     confirmation_code = serializers.CharField(max_length=200, required=True)
-
-    class Meta:
-        fields = ('username', 'confirmation_code')
-        model = User

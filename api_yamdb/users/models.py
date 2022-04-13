@@ -26,12 +26,13 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     username_validator = RegexValidator(r'^[\w.@+-]+')
 
-    username = models.CharField(max_length=50,
+    username = models.CharField(max_length=150,
                                 blank=True,
                                 null=True,
                                 default='None',
                                 verbose_name='Юзернейм',
                                 validators=[username_validator],
+                                unique=True,
                                 )
 
     bio = models.TextField(
@@ -47,7 +48,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
 
     role = models.CharField(
-        max_length=50,
+        max_length=max(len(role) for role, _ in ROLES_CHOICES),
         choices=ROLES_CHOICES,
         default=UserRole.USER,
         verbose_name='Роль',
@@ -79,7 +80,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def admin(self):
-        return self.role == UserRole.ADMIN or self.is_admin
+        return self.role == UserRole.ADMIN or (
+            self.is_admin or self.is_staff
+        )
 
     @property
     def superuser(self):
