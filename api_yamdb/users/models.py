@@ -2,7 +2,6 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.core.validators import RegexValidator
 from django.db import models
 
-from users.confirmation_code import generate_confirmation_code
 from users.managers import UserManager
 
 
@@ -44,7 +43,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         max_length=100,
         null=True,
         verbose_name='Код подтверждения',
-        default=generate_confirmation_code(),
     )
 
     role = models.CharField(
@@ -72,11 +70,9 @@ class User(AbstractBaseUser, PermissionsMixin):
                                  verbose_name='Фамилия',
                                  )
 
-    is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
-    last_login = models.DateTimeField(null=True, blank=True)
 
     @property
     def admin(self):

@@ -107,7 +107,7 @@ def sign_up(request):
     email = serializer.validated_data['email']
     username = serializer.validated_data['username']
     try:
-        User.objects.get_or_create(
+        user = User.objects.get_or_create(
             username=username,
             email=email)
     except IntegrityError:
@@ -122,9 +122,8 @@ def sign_up(request):
                 status=status.HTTP_400_BAD_REQUEST
             )
     confirmation_code = generate_confirmation_code()
-    User.objects.filter(email=email).update(
-        confirmation_code=confirmation_code
-    )
+    user = User(confirmation_code=confirmation_code)
+    user.save()
     send_mail(
         'Подтверждение регистрации на YaMDB',
         f'Код подтверждения {confirmation_code}',
@@ -161,7 +160,7 @@ class UsersViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()
     lookup_field = 'username'
-    search_fields = ("user__username",)
+    search_fields = ('user__username',)
     permission_classes = (IsAuthenticated,
                           IsAdminPermission | IsSuperuserPermission)
 
